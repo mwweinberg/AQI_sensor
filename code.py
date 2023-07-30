@@ -36,8 +36,8 @@ print("wifi connected")
 
 #these variables sets up the requests
 pool = socketpool.SocketPool(wifi.radio)
-requests = requests.Session(pool, ssl.create_default_context())
-
+#requests = requests.Session(pool, ssl.create_default_context())
+requests = funhouse.network._wifi.requests
 
 
 #IO Stuff
@@ -97,14 +97,17 @@ while True:
     # get remote AQI data
     # #https://learn.adafruit.com/adafruit-funhouse/getting-the-date-time   
     target_URL = keys.AQI_URL
-    # print(target_URL)
-    # pool = socketpool.SocketPool(wifi.radio)
     
-    #response = requests.get(target_URL)
-    #print(response)
-    # jsonResponse = response.json()
-    # currentAQI = jsonResponse[0]["AQI"]
-    currentAQI = 20
+    try:
+        response = requests.get(target_URL, timeout = 10)
+        #print(response)
+        jsonResponse = response.json()
+        print(jsonResponse[0]["AQI"])
+        currentAQI = jsonResponse[0]["AQI"]
+    except:
+        currentAQI = 0
+        print('request failed')
+    
 
     #text stuff
     #set the label
@@ -200,7 +203,7 @@ while True:
     #map_range works (inputnumber, orig min, orig max, new min, new max)
     #right reading bounds appear to be ~1800-54000, real world is closer to 1800-5000)
     #goal here is to make the lights bright when it is bright and dim when it is dark
-    brightness = map_range(funhouse.peripherals.light, 1800, 6000, 0, 1)
+    brightness = map_range(funhouse.peripherals.light, 1000, 8000, 0, 1)
     print(brightness)
     funhouse.peripherals.dotstars.brightness = brightness
 
