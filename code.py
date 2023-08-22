@@ -73,6 +73,8 @@ aqi_value = funhouse.add_text(
 )
 funhouse.display.show(funhouse.splash)
 
+counter = 0
+
 while True:
     try:
         aqdata = pm25.read()
@@ -98,15 +100,23 @@ while True:
     # #https://learn.adafruit.com/adafruit-funhouse/getting-the-date-time   
     target_URL = keys.AQI_URL
     
-    try:
-        response = requests.get(target_URL, timeout = 10)
-        #print(response)
-        jsonResponse = response.json()
-        print(jsonResponse[0]["AQI"])
-        currentAQI = jsonResponse[0]["AQI"]
-    except:
-        currentAQI = 0
-        print('request failed')
+    if counter == 0:
+        try:
+            response = requests.get(target_URL, timeout = 10)
+            #print(response)
+            jsonResponse = response.json()
+            print(jsonResponse[0]["AQI"])
+            currentAQI = jsonResponse[0]["AQI"]
+            counter += 1
+        except:
+            currentAQI = 0
+            print('request failed')
+    if 0 < counter < 8:
+        counter += 1
+        print("counting up, now at " + str(counter))
+    if counter > 7:
+        counter = 0
+        print("reset counter")
     
 
     #text stuff
