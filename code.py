@@ -45,7 +45,7 @@ FEED_2_5 = "2pointfive"
 TEMP_FEED = "temp"
 HUM_FEED = "humidity"
 TEMPERATURE_OFFSET = (
-    3  # Degrees C to adjust the temperature to compensate for board produced heat
+    8  # Degrees C to adjust the temperature to compensate for board produced heat
 )
 
 #Colors
