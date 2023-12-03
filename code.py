@@ -88,7 +88,8 @@ while True:
     # Push to IO using REST
     try:
         funhouse.push_to_io(FEED_2_5, aqdata["pm25 env"])
-        funhouse.push_to_io(TEMP_FEED, funhouse.peripherals.temperature - TEMPERATURE_OFFSET)
+        #does the temp offset and converts C to F
+        funhouse.push_to_io(TEMP_FEED, ((funhouse.peripherals.temperature - TEMPERATURE_OFFSET)*9 / 5 + 32))
         funhouse.push_to_io(HUM_FEED, funhouse.peripherals.relative_humidity)
         print("data pushed")
     except:
