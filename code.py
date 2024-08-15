@@ -15,6 +15,10 @@ import wifi
 #for the light sensor mapping
 from adafruit_simplemath import map_range
 
+#import the secrets
+#use like 'print(secrets['key'])
+from secrets import secrets
+
 
 reset_pin = None
 
@@ -99,25 +103,47 @@ while True:
     
     # get remote AQI data
     # #https://learn.adafruit.com/adafruit-funhouse/getting-the-date-time   
-    target_URL = keys.AQI_URL
+    #this is the target URL for the NYC version
+    #target_URL = keys.AQI_URL
     
-    if counter == 0:
-        try:
-            response = requests.get(target_URL, timeout = 10)
-            #print(response)
-            jsonResponse = response.json()
-            print(jsonResponse[0]["AQI"])
-            currentAQI = jsonResponse[0]["AQI"]
-            counter += 1
-        except:
-            currentAQI = 0
-            print('request failed')
-    if 0 < counter < 8:
-        counter += 1
-        print("counting up, now at " + str(counter))
-    if counter > 7:
-        counter = 0
-        print("reset counter")
+    #this version should work globally
+    target_URL = 'https://api.waqi.info/feed/here/?token='+secrets['aqicn_key']
+    
+    #comment from 8/24 when you updated this for Berlin - you have no idea what the counter is for here
+    # if counter == 0:
+    #     try:
+    #         response = requests.get(target_URL, timeout = 10)
+    #         #print(response)
+    #         jsonResponse = response.json()
+    #         #original NYC version
+    #         # print(jsonResponse[0]["AQI"])
+    #         # currentAQI = jsonResponse[0]["AQI"]
+    #         #new global version
+    #         currentAQI = jsonResponse['data']['aqi']
+    #         print("current AQI ="+currentAQI)
+    #         counter += 1
+    #     except:
+    #         currentAQI = 0
+    #         print('request failed')
+    # if 0 < counter < 8:
+    #     counter += 1
+    #     print("counting up, now at " + str(counter))
+    # if counter > 7:
+    #     counter = 0
+    #     print("reset counter")
+    
+    #so you decided to do one without the counter
+    try:
+        response = requests.get(target_URL, timeout = 10)
+        #print(response)
+        jsonResponse = response.json()
+        #print(jsonResponse)
+        currentAQI = jsonResponse['data']['aqi']
+        print(currentAQI)
+        #counter += 1
+    except:
+        currentAQI = 0
+        print('request failed')
     
 
     #text stuff
